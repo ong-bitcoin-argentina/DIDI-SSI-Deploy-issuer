@@ -1,0 +1,86 @@
+version: "3"
+services:
+
+  issuer-backend:
+    image: aidi00.azurecr.io/didi-issuer-back:${DIDI_ISSUER_VERSION}
+    environment:
+      - VERSION=${DIDI_ISSUER_VERSION}
+      - DEBUGG_MODE=${DEBUGG_MODE}
+      - ISSUER_SERVER_DID=${DIDI_ISSUER_DID}
+      - ISSUER_SERVER_PRIVATE_KEY=${DIDI_ISSUER_PRIVATE_KEY}
+      - MONGO_DIR=${MONGO_DIR}
+      - MONGO_PORT=${MONGO_PORT}
+      - MONGO_USERNAME=${DIDI_ISSUER_MONGO_USERNAME}
+      - MONGO_PASSWORD=${DIDI_ISSUER_MONGO_PASSWORD}
+      - MONGO_DB=${DIDI_ISSUER_MONGO_DB}
+      - DIDI_API=${DIDI_SERVER_API}
+      - ADDRESS=${DIDI_ISSUER_ADDRESS}
+      - FULL_URL=${DIDI_ISSUER_FULL_URL}
+      - HASH_SALT=${DIDI_ISSUER_HASH_SALT}             #Salt used hash indexable data in MongoDB (tel, mail, etc.).
+      - RSA_PRIVATE_KEY=${DIDI_ISSUER_RSA_PRIVATE_KEY} #RSA Issuer private key.
+      - PORT=${DIDI_ISSUER_PORT}
+      - APP_INSIGTHS_IKEY=${APP_INSIGTHS_IKEY}
+      - ENVIRONMENT=${ENVIRONMENT}
+      - ENABLE_INSECURE_ENDPOINTS=${DIDI_ISSUER_ENABLE_INSECURE_ENDPOINTS}
+      - NAME=${DIDI_ISSUER_NAME}
+      - DISABLE_TELEMETRY_CLIENT=${DISABLE_TELEMETRY_CLIENT}
+      - ISSUER_API_URL=${DIDI_ISSUER_API_URL}
+      - BLOCKCHAIN_URL_MAIN=${BLOCKCHAIN_URL_MAIN}
+      - BLOCKCHAIN_URL_RSK=${BLOCKCHAIN_URL_RSK}
+      - BLOCKCHAIN_URL_LAC=${BLOCKCHAIN_URL_LAC}
+      - BLOCKCHAIN_URL_BFA=${BLOCKCHAIN_URL_BFA}
+      - BLOCKCHAIN_CONTRACT_MAIN=${BLOCKCHAIN_CONTRACT_MAIN}
+      - BLOCKCHAIN_CONTRACT_RSK=${BLOCKCHAIN_CONTRACT_RSK}
+      - BLOCKCHAIN_CONTRACT_LAC=${BLOCKCHAIN_CONTRACT_LAC}
+      - BLOCKCHAIN_CONTRACT_BFA=${BLOCKCHAIN_CONTRACT_BFA}
+    depends_on:
+      - mongo
+    ports:
+      - "127.0.0.1:3500:${DIDI_ISSUER_PORT}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.issuer-backend.rule=Host(`${DIDI_ISSUER_FQDN}`)"
+      - "traefik.http.routers.issuer-backend.entrypoints=web-secure"
+      - "traefik.http.routers.issuer-backend.tls=true"
+      - "traefik.http.routers.issuer-backend.tls.certresolver=le"
+  issuer-frontend:
+    image: aidi00.azurecr.io/didi-issuer-front:${DIDI_ISSUER_FRONTEND_VERSION}
+    environment:
+      - REACT_APP_API_URL=${DIDI_ISSUER_FRONTEND_API_URL}
+      - REACT_APP_VERSION=${DIDI_ISSUER_FRONTEND_VERSION}
+    depends_on:
+      - issuer-backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.issuer-frontend.rule=Host(`${DIDI_ISSUER_FRONTEND_FQDN}`)"
+      - "traefik.http.routers.issuer-frontend.entrypoints=web-secure"
+      - "traefik.http.routers.issuer-frontend.tls=true"
+      - "traefik.http.routers.issuer-frontend.tls.certresolver=le"
+  proxy:
+    image: traefik:v2.3
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web-secure.address=:443"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entryPoint.to=web-secure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--certificatesResolvers.le.acme.email=${POSTMASTER_MAILBOX}"
+      - "--certificatesResolvers.le.acme.storage=/certs/acme.json"
+      - "--certificatesresolvers.le.acme.tlschallenge=true"
+    # - "--certificatesresolvers.le.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory" #Uncomment if you want to use test certificates instead of productive ones.
+    ports:
+      - "80:80"
+      - "443:443"
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/home/app/certs/:/certs"
+    # - "./trafeik-${ENVIRONMENT}.toml:/etc/traefik/traefik.toml" #Uncomment if you want to use a config file instead of labels in different services.
+    depends_on:
+      - issuer-backend
+      - issuer-frontend
+
+

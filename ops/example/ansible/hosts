@@ -1,0 +1,4 @@
+# Current deploy relies on a single server
+# Change it to the corresponding server (it has to be the same as value from variable $SERVER_IP on "/ops/<ENVIRONMENT>/docker/.env"). 
+# Put the IP beyond this line (1.2.3.4 is an example):
+1.2.3.4
