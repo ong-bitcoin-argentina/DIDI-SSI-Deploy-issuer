@@ -45,7 +45,7 @@ Each component is dockerized using *Alpine Linux v3.11* with *Node v10.x*.
 
 ## 4.2. Configuring SSH auth for deployment script 
 
- 1. Copy the same public key/s you used on item **3.2** to folder `/ops/<environment>/ansible/ssh-keys` and delete the `example`ones.
+ 1. Copy the same public key/s you used on item **3.2** to folder `/ops/<environment>/ansible/ssh-keys` and delete the `example`ones (before that notice the format your SSH key should have).
  2. Edit `/ops/<environment>/ansible/custom-vars.json`to point to the public keys you copied on step **1**. Use the `example` ones to guide yourself,  but delete them after you have put the path to your key/s (those are merelly illustrative).
  3. Edit `/ops/<environment>/ansible/hosts` IP with the one from the server you will deploy to.
 
