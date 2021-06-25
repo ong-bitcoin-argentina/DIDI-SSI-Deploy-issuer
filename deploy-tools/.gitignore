@@ -1,0 +1,4 @@
+#Installed libraries:
+.DS_Store
+node_modules/
+data/
