@@ -12,8 +12,8 @@ Each component is dockerized using *Alpine Linux v3.11* with *Node v10.x*.
 
 ## 3.1. Minimum Requirements
 
-* **RAM:** 3GB.
-* **CPU:** 1 core.
+* **RAM:** 4GB.
+* **CPU:** 2 core.
 * **HDD:** 15 GB.
 * **OS:** Linux (*Debian 10* recommended).
 
