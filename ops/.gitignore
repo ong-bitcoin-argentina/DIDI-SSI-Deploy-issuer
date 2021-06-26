@@ -113,4 +113,4 @@ temp/
 */configs/*
 
 # Ignore all env files everyhwhere
-**/*env*
+**/*env
