@@ -34,6 +34,7 @@ Each component is dockerized using *Alpine Linux v3.11* with *Node v10.x*.
 		#MaxAuthTries 6
 		MaxSessions 100
 
+* If you update `/etc/ssh/sshd_config` file, after that, you will need to run `service sshd restart` to reload the configuration.
 * You have to enable passwordless SSH access to server with root using your personal SSH key (you can do it for more than one if you want). For doing that, add your public key to file `/root/.ssh/authorized_keys`
 
 # 4. Configuration
