@@ -12,8 +12,8 @@ Each component is dockerized using *Alpine Linux v3.11* with *Node v10.x*.
 
 ## 3.1. Minimum Requirements
 
-* **RAM:** 4GB.
-* **CPU:** 2 core.
+* **RAM:** 3GB.
+* **CPU:** 1 core.
 * **HDD:** 15 GB.
 * **OS:** Linux (*Debian 10* recommended).
 
@@ -34,7 +34,6 @@ Each component is dockerized using *Alpine Linux v3.11* with *Node v10.x*.
 		#MaxAuthTries 6
 		MaxSessions 100
 
-* If you update `/etc/ssh/sshd_config` file, after that, you will need to run `service sshd restart` to reload the configuration.
 * You have to enable passwordless SSH access to server with root using your personal SSH key (you can do it for more than one if you want). For doing that, add your public key to file `/root/.ssh/authorized_keys`
 
 # 4. Configuration
@@ -46,7 +45,7 @@ Each component is dockerized using *Alpine Linux v3.11* with *Node v10.x*.
 
 ## 4.2. Configuring SSH auth for deployment script 
 
- 1. Copy the same public key/s you used on item **3.2** to folder `/ops/<environment>/ansible/ssh-keys` and delete the `example` ones (before that notice the format your SSH key should have).
+ 1. Copy the same public key/s you used on item **3.2** to folder `/ops/<environment>/ansible/ssh-keys` and delete the `example`ones (before that notice the format your SSH key should have).
  2. Edit `/ops/<environment>/ansible/custom-vars.json`to point to the public keys you copied on step **1**. Use the `example` ones to guide yourself,  but delete them after you have put the path to your key/s (those are merelly illustrative).
  3. Edit `/ops/<environment>/ansible/hosts` IP with the one from the server you will deploy to.
 
@@ -73,6 +72,8 @@ To run `key-generator.js`run the following commands inside `deploy-tools` folder
 
 Change values of variables inside the file `/ops/<environment>/configs/mongo-init.js` wich are equal to `<CHANGE_ME>`. Guide yourself using the comments. Use the values of the corresponding variables in `.env` file.
 
+**IMPORTANT**: There is an attribute used to insert one register in DIDI Issuer's database marked with an **(#)** in `mongo-init.js` file (named `private_key`), which value was generated in step **4.3**.
+
 ## 4.5. Expose MongoDB port
 
 If you are deploying to a testing environment, probably you will want to expose the database port. To do so, edit the `ports` section of service `mongo` in file `/ops/<environment>/docker/docker-compose-overrides.yml`:
@@ -98,7 +99,7 @@ To do this, first of all you need to install **Ansible** in your computer (see h
 **IMPORTANT**: You will need to perform this step only if:
 
 * This is the first time you are deploying to your server.
-* You need to add an extra authorized SSH Key for *ops.sh* script authentication.
+* You need to add an extra authorized SSH Key for docker-compose authentication.
 
 ## 5.2.  Deploying solution
 
@@ -125,3 +126,4 @@ Also, you can stop/start/restart one module (and its dependent ones) running the
 	./ops.sh --restart <environment> <docker_module>
 
 
+	
