@@ -72,8 +72,6 @@ To run `key-generator.js`run the following commands inside `deploy-tools` folder
 
 Change values of variables inside the file `/ops/<environment>/configs/mongo-init.js` wich are equal to `<CHANGE_ME>`. Guide yourself using the comments. Use the values of the corresponding variables in `.env` file.
 
-**IMPORTANT**: There is an attribute used to insert one register in DIDI Issuer's database marked with an **(#)** in `mongo-init.js` file (named `private_key`), which value was generated in step **4.3**.
-
 ## 4.5. Expose MongoDB port
 
 If you are deploying to a testing environment, probably you will want to expose the database port. To do so, edit the `ports` section of service `mongo` in file `/ops/<environment>/docker/docker-compose-overrides.yml`:

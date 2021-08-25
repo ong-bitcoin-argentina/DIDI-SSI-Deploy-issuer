@@ -1,0 +1,10 @@
+{
+  "authorized_keys": [
+    {
+      "key": "{{ lookup('file', '../test/ansible/ssh-keys/tlosada.pub') }}"
+    },    
+    {
+      "key": "{{ lookup('file', '../test/ansible/ssh-keys/movejasmith.pub') }}"
+    }
+  ]
+}
