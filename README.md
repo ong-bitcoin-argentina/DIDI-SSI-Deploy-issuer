@@ -22,7 +22,7 @@ Each component is dockerized using *Alpine Linux v3.11* with *Node v10.x*.
 ## 3.2. Access Requirements
 
 * SSH access with **root** user must be enabled.
-* Parameter `MaxSessions` must be disabled (commented) or have a value of 100 (or more).
+* Parameter `MaxSessions` must be disabled (commented) or have a value of **100** (or more).
 
 		~$ nano /etc/ssh/sshd_config
 		
@@ -34,6 +34,7 @@ Each component is dockerized using *Alpine Linux v3.11* with *Node v10.x*.
 		#MaxAuthTries 6
 		MaxSessions 100
 
+* If you update `/etc/ssh/sshd_config` file, after that, you will need to run `service sshd restart` to reload the configuration.
 * You have to enable passwordless SSH access to server with root using your personal SSH key (you can do it for more than one if you want). For doing that, add your public key to file `/root/.ssh/authorized_keys`
 
 # 4. Configuration
@@ -97,7 +98,7 @@ To do this, first of all you need to install **Ansible** in your computer (see h
 **IMPORTANT**: You will need to perform this step only if:
 
 * This is the first time you are deploying to your server.
-* You need to add an extra authorized SSH Key for docker-compose authentication.
+* You need to add an extra authorized SSH Key for *ops.sh* authentication.
 
 ## 5.2.  Deploying solution
 
@@ -124,4 +125,3 @@ Also, you can stop/start/restart one module (and its dependent ones) running the
 	./ops.sh --restart <environment> <docker_module>
 
 
-	
