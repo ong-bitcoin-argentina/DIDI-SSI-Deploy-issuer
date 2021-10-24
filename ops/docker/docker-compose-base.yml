@@ -1,8 +1,9 @@
 version: "3"
-services:
 
+services:
   issuer-backend:
     image: aidi00.azurecr.io/didi-issuer-back:${DIDI_ISSUER_VERSION}
+    restart: unless-stopped
     environment:
       - VERSION=${DIDI_ISSUER_VERSION}
       - DEBUGG_MODE=${DEBUGG_MODE}
@@ -37,6 +38,7 @@ services:
       - "traefik.http.routers.issuer-backend.tls.certresolver=le"
   issuer-frontend:
     image: aidi00.azurecr.io/didi-issuer-front:${DIDI_ISSUER_FRONTEND_VERSION}
+    restart: unless-stopped
     environment:
       - REACT_APP_API_URL=${DIDI_ISSUER_FRONTEND_API_URL}
       - REACT_APP_VERSION=${DIDI_ISSUER_FRONTEND_VERSION}
@@ -49,7 +51,8 @@ services:
       - "traefik.http.routers.issuer-frontend.tls=true"
       - "traefik.http.routers.issuer-frontend.tls.certresolver=le"
   proxy:
-    image: traefik:v2.3
+    image: traefik:v2.5.3
+    restart: unless-stopped
     command:
       - "--log.level=DEBUG"
       - "--api.insecure=true"
